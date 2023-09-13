@@ -62,3 +62,7 @@ FROM autores a
 LEFT JOIN livros l ON a.id = l.autor_id
 LEFT JOIN vendas v ON l.titulo = v.produto
 GROUP BY a.nome;
+SELECT alunos.nome, COUNT(matriculas.curso) as numero_matriculas
+FROM alunos
+LEFT JOIN matriculas ON alunos.id = matriculas.aluno_id
+GROUP BY alunos.nome;

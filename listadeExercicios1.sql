@@ -57,3 +57,8 @@ FROM vendas
 GROUP BY produto
 ORDER BY receita_total ASC
 LIMIT 1;
+SELECT a.nome, SUM(20) as receita_total
+FROM autores a
+LEFT JOIN livros l ON a.id = l.autor_id
+LEFT JOIN vendas v ON l.titulo = v.produto
+GROUP BY a.nome;

@@ -94,3 +94,31 @@ END //
 
 DELIMITER ;
 CALL sp_TitulosPorCategoria('Romance');
+
+
+DELIMITER //
+CREATE PROCEDURE sp_AdicionarLivro(
+    IN titulo_livro VARCHAR(255),
+    IN editora_id INT,
+    IN ano_publicacao INT,
+    IN numero_paginas INT,
+    IN categoria_id INT,
+    OUT mensagem VARCHAR(255)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR 1062
+    BEGIN
+        SET mensagem = 'Negado. O titulo já existe';
+    END;
+
+    INSERT INTO Livro (Titulo, Editora_ID, Ano_Publicacao, Numero_Paginas, Categoria_ID)
+    VALUES (titulo_livro, editora_id, ano_publicacao, numero_paginas, categoria_id);
+    
+    SET mensagem = 'Livro adicionado.';
+END //
+
+DELIMITER ;
+CALL sp_AdicionarLivro('História de Roma', 1, 1995, 400, 4, @mensagem);
+SELECT @mensagem;
+CALL sp_AdicionarLivro('Livro Novo', 2, 2023, 333, 2, @mensagem);
+SELECT @mensagem;

@@ -135,3 +135,43 @@ END //
 DELIMITER ;
 CALL sp_AutorMaisAntigo(@nome_autor);
 SELECT @nome_autor;
+
+
+DELIMITER //
+CREATE PROCEDURE sp_LivrosPorCategoria(IN categoriaNome VARCHAR(100))
+BEGIN
+    -- Declare um cursor para percorrer os resultados da consulta.
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE titulo VARCHAR(255);
+
+    -- Crie um cursor que seleciona os títulos dos livros de uma categoria específica.
+    DECLARE cur CURSOR FOR
+    SELECT Livro.Titulo
+    FROM Livro
+    INNER JOIN Categoria ON Livro.Categoria_ID = Categoria.Categoria_ID
+    WHERE Categoria.Nome = categoriaNome;
+
+    -- Defina um manipulador para tratar o caso em que nenhum resultado é encontrado.
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    -- Abra o cursor.
+    OPEN cur;
+
+    -- Inicie um loop para recuperar os títulos dos livros.
+    read_loop: LOOP
+        -- Tente buscar um título do cursor.
+        FETCH cur INTO titulo;
+
+        -- Verifique se todos os registros foram lidos.
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Se um título foi recuperado, selecione-o.
+        SELECT titulo;
+    END LOOP;
+
+    -- Feche o cursor.
+    CLOSE cur;
+END //
+DELIMITER ;

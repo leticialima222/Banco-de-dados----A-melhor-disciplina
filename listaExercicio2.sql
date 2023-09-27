@@ -122,3 +122,16 @@ CALL sp_AdicionarLivro('História de Roma', 1, 1995, 400, 4, @mensagem);
 SELECT @mensagem;
 CALL sp_AdicionarLivro('Livro Novo', 2, 2023, 333, 2, @mensagem);
 SELECT @mensagem;
+
+
+DELIMITER //
+CREATE PROCEDURE sp_AutorMaisAntigo(OUT nome_autor VARCHAR(255))
+BEGIN
+    SELECT CONCAT(Nome, ' ', Sobrenome) INTO nome_autor
+    FROM Autor
+    WHERE Data_Nascimento = (SELECT MIN(Data_Nascimento) FROM Autor);
+END //
+
+DELIMITER ;
+CALL sp_AutorMaisAntigo(@nome_autor);
+SELECT @nome_autor;
